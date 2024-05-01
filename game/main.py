@@ -3,10 +3,15 @@ import pygame
 from Building import building
 
 def run_game():
-    screen_width, screen_height, floor_height, floor_width, num_elevators,numfloors=1000, 1800, 70, 200, 5,25
-    num_bul=2
     pygame.init()
-    screen = pygame.display.set_mode((1800, 1000))
+    info = pygame.display.Info()
+    screen_height = info.current_w  -50
+    screen_width = info.current_h -50
+     
+    floor_height, floor_width, num_elevators,numfloors=  70, 200, 5,25
+    num_bul=3
+    
+    screen = pygame.display.set_mode((screen_height, screen_width))
     pygame.display.set_caption('Building Simulation')
     clock = pygame.time.Clock()
     print(screen_width/numfloors)
