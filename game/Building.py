@@ -13,16 +13,15 @@ class ElevatorFactory:
 
 class building:
 
-    def __init__(self, screen, floorheight, floorwidth, numofelv=2, space=1,numfloors=17):
+    def __init__(self, screen, floorheight, floorwidth, numofelv=2, space=1,numfloors=25,p=0):
         self.numfloors=numfloors
         self.screen = screen
-        
-        self.elevators = [ElevatorFactory.create_elevator(screen, floorwidth//2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
-
+        self.elevators = [elevator(screen, p+floorwidth//2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
 
 
         self.numfloors=numfloors
-        self.floors = [FloorFactory.create_floor(screen, 0, (self.numfloors - 1 - i) * floorheight, floorheight, floorwidth//2, i, self) for i in range(self.numfloors)]
+        self.floors = [floor(screen, 0+p, (self.numfloors - 1 - i) * floorheight, floorheight, floorwidth//2, i, self) for i in range(self.numfloors)]
+
         
     def update(self, floor):
         selectedelevator = self.elevators[0]

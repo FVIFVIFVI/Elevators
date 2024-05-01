@@ -4,15 +4,18 @@ from Building import building
 
 def run_game():
     screen_width, screen_height, floor_height, floor_width, num_elevators,numfloors=1000, 1800, 70, 200, 5,25
+    num_bul=2
     pygame.init()
     screen = pygame.display.set_mode((1800, 1000))
     pygame.display.set_caption('Building Simulation')
     clock = pygame.time.Clock()
     print(screen_width/numfloors)
-    # building_instance = building(screen, screen_width/numfloors, floor_width, num_elevators)
     building_instance = building(screen, screen_width/numfloors, floor_width, num_elevators,1,numfloors)
-
+    building_instance1 = building(screen, screen_width/numfloors, floor_width, num_elevators,1,numfloors,floor_width//2+num_elevators*80+40)
     a=1
+    b=[]
+    for i in range(0,num_bul):
+     b.append(building(screen, screen_width/numfloors, floor_width, num_elevators,1,numfloors,(floor_width//2+num_elevators*80+40)*i))
     running = True
     while running:
         if a==1:
@@ -24,12 +27,16 @@ def run_game():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 print("Mouse Clicked at:", event.pos)  
                 if event.button == 1:  
-                    for floor in building_instance.floors:
-                        floor.checkclick(event.pos)
-
+                    for i in b:
+                        for floor in i.floors:
+                            floor.checkclick(event.pos)
+                  
         screen.fill((255, 255, 255))  
-        building_instance.draw()  
-        building_instance.update1(dt)
+        for i in b:
+            i.draw()
+            i.update1(dt)
+
+      
         pygame.display.flip()  
         clock.tick(60)  
 
