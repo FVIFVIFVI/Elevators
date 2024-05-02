@@ -5,7 +5,11 @@ imgelv = "elv.png"
 a88=0
 sound1 = 'ding.mp3'
 class elevator:
+    screen1=None
+    pygame_initialized = False
     def __init__(self, screen, initialposx, floorheight, initial_ypos):
+        elevator.screen1=  (pygame.display.Info()).current_h-50
+        elevator.pygame_initialized = True
         self.screen = screen
         self.ypos = initial_ypos
         self.xpos = initialposx
@@ -90,8 +94,8 @@ class elevator:
         for target in self.targets:#עובד רק בגיקסה הפשוטה
             
             target.timewait -= diftime
-        
-        adjusted_y = abs(self.rect.y - 1000)  
+        print(self.screen1)
+        adjusted_y = abs(self.rect.y - 1030)  
         self.myfloor = math.floor(adjusted_y / self.floorheight)
 
         if self.direction < 0:

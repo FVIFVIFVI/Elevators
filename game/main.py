@@ -7,7 +7,7 @@ def run_game():
     info = pygame.display.Info()
     screen_height = info.current_w  -50
     screen_width = info.current_h -50
-     
+    print(screen_width)  
     floor_height, floor_width, num_elevators,numfloors=  70, 200, 5,25
     num_bul=3
     
