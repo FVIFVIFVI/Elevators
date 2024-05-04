@@ -24,22 +24,19 @@ class building:
 
         
     def update(self, floor):
-        selectedelevator = self.elevators[0]
-        mindistance = self.numfloors*20
-        for elevator in self.elevators:
-            
-            if elevator.ismovingindirection(floor.floornum, elevator.direction):
-                distance = abs(elevator.myfloor - floor.floornum)
-                
-                if distance < mindistance:
-                
-                    mindistance = distance
-                    selectedelevator = elevator
-                
-        selectedelevator.addtarget(floor)
+        selectedelevator = None
+        minwaittime = float('inf')  # Initialize with a very large number
+       
+        for elev in self.elevators:
+            wait_time = elev.opt(elev.targets, elev.myfloor, floor.floornum)
+            print(wait_time,elev.myfloor)
+            if wait_time < minwaittime:
+                minwaittime = wait_time
+                selectedelevator = elev
         
-        #floor.timewait=mindistance*0.5
-        selectedelevator.moving=True
+        if selectedelevator:
+            selectedelevator.addtarget(floor,minwaittime)
+            selectedelevator.moving = True
     def update1(self,dt):
         for i in self.elevators:
             

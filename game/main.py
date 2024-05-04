@@ -7,14 +7,14 @@ def run_game():
     info = pygame.display.Info()
     screen_height = info.current_w  -50
     screen_width = info.current_h -50
-    print(screen_width)  
+      
     floor_height, floor_width, num_elevators,numfloors=  70, 200, 5,25
     num_bul=3
     
     screen = pygame.display.set_mode((screen_height, screen_width))
     pygame.display.set_caption('Building Simulation')
     clock = pygame.time.Clock()
-    print(screen_width/numfloors)
+    
     building_instance = building(screen, screen_width/numfloors, floor_width, num_elevators,1,numfloors)
     building_instance1 = building(screen, screen_width/numfloors, floor_width, num_elevators,1,numfloors,floor_width//2+num_elevators*80+40)
     a=1
