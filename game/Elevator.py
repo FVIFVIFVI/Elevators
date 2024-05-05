@@ -31,7 +31,7 @@ class elevator:
         self.image = pygame.transform.scale(originalimage, (75, int(floorheight * 0.75)))
         self.rect = self.image.get_rect(topleft=(self.xpos, self.ypos))
         self.timewait=0#לזכור לאפס
-        print(self.screen1,"yyy")
+        
     def addtarget(self, floor,sum):
         
         if floor not in self.targets:
@@ -59,8 +59,14 @@ class elevator:
                 return True
 
     
+    def setfloor(self,y):
+        adjusted_y = abs(y - self.screen1)
+        a = math.floor(adjusted_y / self.floorheight)
+        if self.direction!=None:
+            if self.direction < 0:
+                a -= 1
+        return a
     
-
     def setdirection(self, floornum):
         if self.myfloor < floornum:
             self.direction = -1
@@ -93,11 +99,8 @@ class elevator:
             
             target.timewait -= diftime
         
-        adjusted_y = abs(self.rect.y - self.screen1)  
-        self.myfloor = math.floor(adjusted_y / self.floorheight)
-
-        if self.direction < 0:
-            self.myfloor -= 1
+          
+        self.myfloor=self.setfloor(self.rect.y)
 
         if self.myfloor == targetfloor.floornum:
             self.dingsound.play()

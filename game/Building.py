@@ -17,19 +17,24 @@ class building:
         self.numfloors=numfloors
         self.screen = screen
         self.elevators = [elevator(screen, p+floorwidth//2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
-
+        #self.locateelv = {elevator.ypos: elevator for elevator in self.elevators}
 
         self.numfloors=numfloors
         self.floors = [floor(screen, 0+p, (self.numfloors - 1 - i) * floorheight, floorheight, floorwidth//2, i, self) for i in range(self.numfloors)]
+        self.locatefloor = {i: floor for i, floor in enumerate(self.floors)}
+        self.init_params = [screen, floorheight, floorwidth, numofelv, space, numfloors, p]
+    def restelv(self):
+        screen, floorheight, floorwidth, numofelv, space, numfloors, p = self.init_params
+        self.elevators=[]
+        self.elevators = [elevator(screen, p+floorwidth//2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
 
-        
     def update(self, floor):
         selectedelevator = None
-        minwaittime = float('inf')  # Initialize with a very large number
+        minwaittime = float('inf')  
        
         for elev in self.elevators:
             wait_time = elev.opt(elev.targets, elev.myfloor, floor.floornum)
-            print(wait_time,elev.myfloor)
+            
             if wait_time < minwaittime:
                 minwaittime = wait_time
                 selectedelevator = elev
@@ -48,4 +53,5 @@ class building:
         for floor in self.floors:
             floor.draw()
         for elevator in self.elevators:
+            
             elevator.draw()

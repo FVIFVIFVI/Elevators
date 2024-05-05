@@ -1,3 +1,4 @@
+from button import *
 
 import pygame
 from Building import building
@@ -14,14 +15,14 @@ def run_game():
     screen = pygame.display.set_mode((screen_height, screen_width))
     pygame.display.set_caption('Building Simulation')
     clock = pygame.time.Clock()
+    initbul=ButtonFactory.create_button(screen, screen_height-80, 30, 100, 50, "Start", "rect")
     
-    building_instance = building(screen, screen_width/numfloors, floor_width, num_elevators,1,numfloors)
-    building_instance1 = building(screen, screen_width/numfloors, floor_width, num_elevators,1,numfloors,floor_width//2+num_elevators*80+40)
     a=1
     b=[]
     for i in range(0,num_bul):
      b.append(building(screen, screen_width/numfloors, floor_width, num_elevators,1,numfloors,(floor_width//2+num_elevators*80+40)*i))
     running = True
+    a111=0
     while running:
         if a==1:
          dt = clock.tick(60)
@@ -30,17 +31,26 @@ def run_game():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                print("Mouse Clicked at:", event.pos)  
-                if event.button == 1:  
-                    for i in b:
-                        for floor in i.floors:
-                            floor.checkclick(event.pos)
                   
+                if event.button == 1:  
+                    a111=initbul.checkclick(event.pos)
+                    for i in b:
+                        # a12=i.elevators[0].setfloor(event.pos[1])#לשים לב שיש כאן הנחה שקיים
+                        # i.locatefloor[a12].checkclick(event.pos)
+                        for floor in i.floors:
+                            
+                            floor.checkclick(event.pos)
+        if a111:
+            print(22)
+            for i in b:
+             for i1 in i.elevators:
+                i.restelv()    
+        a111=0
         screen.fill((255, 255, 255))  
         for i in b:
             i.draw()
             i.update1(dt)
-
+        initbul.draw()
       
         pygame.display.flip()  
         clock.tick(60)  
