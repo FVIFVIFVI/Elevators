@@ -18,11 +18,12 @@ class building:
         self.screen = screen
         self.elevators = [elevator(screen, p+floorwidth//2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
         #self.locateelv = {elevator.ypos: elevator for elevator in self.elevators}
-
+        self.elevatorsmove=[]
         self.numfloors=numfloors
         self.floors = [floor(screen, 0+p, (self.numfloors - 1 - i) * floorheight, floorheight, floorwidth//2, i, self) for i in range(self.numfloors)]
         self.locatefloor = {i: floor for i, floor in enumerate(self.floors)}
         self.init_params = [screen, floorheight, floorwidth, numofelv, space, numfloors, p]
+    
     def restelv(self):
         screen, floorheight, floorwidth, numofelv, space, numfloors, p = self.init_params
         self.elevators=[]
@@ -40,13 +41,17 @@ class building:
                 selectedelevator = elev
         
         if selectedelevator:
-            selectedelevator.addtarget(floor,minwaittime)
+            selectedelevator.addtarget(floor,minwaittime)#לא צריך את a  
+            if not selectedelevator.moving :
+                self.elevatorsmove.append(selectedelevator)
             selectedelevator.moving = True
-    def update1(self,dt):
-        for i in self.elevators:
+    def update1(self):
+        for i in self.elevatorsmove:
             
             if i.moving==True:
-              i.move(dt)
+              i.move()
+            else:
+                self.elevatorsmove.remove(i)
             i.draw()
 
     def draw(self):

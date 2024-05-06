@@ -2,7 +2,6 @@ import pygame
 import random
 import math
 imgelv = "elv.png"
-a88=0
 sound1 = 'ding.mp3'
 class elevator:
     screen1=None
@@ -41,7 +40,7 @@ class elevator:
         if self.direction is None:
             self.setdirection(floor.floornum)
         floor.timewait=sum
-    
+        
 
     def opt(self, targets, current_floor, new_floor):
         if not targets:
@@ -73,7 +72,7 @@ class elevator:
         elif self.myfloor > floornum:
             self.direction = +1
 
-    def move(self, dt):
+    def move(self):
         p=False
         if self.time2 == 0:
             self.time3 = pygame.time.get_ticks()
@@ -120,13 +119,13 @@ class elevator:
 
 
 
-    def ismovingindirection(self, floornum, direction):
+    # def ismovingindirection(self, floornum, direction):
         
-        if self.direction is None:
-            return True
-        return (self.direction == 1 and self.myfloor > floornum) or (self.direction == -1 and self.myfloor < floornum)
-    if a88==0:
-        def ismovingindirection(self, floornum,a):
+    #     if self.direction is None:
+    #         return True
+    #     return (self.direction == 1 and self.myfloor > floornum) or (self.direction == -1 and self.myfloor < floornum)
+   
+    def ismovingindirection(self, floornum,a):
             if self.direction is None:
                 return True
 
