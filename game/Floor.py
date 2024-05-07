@@ -35,8 +35,11 @@ class floor:
         self.screen.blit(number_text, number_text_rect)
 
     def checkclick(self, position):
-        if self.button.checkclick(position):
+        if self.button.checkclick(position) :
             self.call_elevator()
 
     def call_elevator(self):
         self.building.update(self)
+
+    def finish(self):
+        self.button.off_on()

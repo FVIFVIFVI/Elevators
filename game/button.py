@@ -10,7 +10,8 @@ class Button:
         self.text = text
         self.shape = shape
         self.rect = pygame.Rect(posx, posy, width, height)
-
+        self.c=(255, 255, 255)
+        self.Buttonpressed=False
     def set_shape(self):
         if self.shape == "rect":
             return pygame.draw.rect
@@ -24,13 +25,24 @@ class Button:
         dshape(self.screen, (128, 128, 128), self.rect)
         
         font = pygame.font.Font(None, 25)
-        button_text = font.render(str(self.text), True, (255, 255, 255))
+        button_text = font.render(str(self.text), True, self.c)
         button_text_rect = button_text.get_rect(center=self.rect.center)
         self.screen.blit(button_text, button_text_rect)
-        
+
+    def   off_on(self) :
+        self.Buttonpressed=not self.Buttonpressed
+        if self.Buttonpressed:
+           self.c=(50,205,50)
+        else:
+            self.c=(255, 255, 255)
+
+
     def checkclick(self, position):
+        
         if self.rect.collidepoint(position):
-            return True
+            if not self.Buttonpressed:
+             self.off_on()
+             return True
         return False
 
 class ButtonFactory:

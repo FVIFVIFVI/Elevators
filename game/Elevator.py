@@ -107,13 +107,14 @@ class elevator:
             self.time1 = current_ticks
             self.pusze = 1
             targetfloor.timewait = 0
-            
+            targetfloor.finish()
             self.targets.pop(0)
             
             
             if not self.targets:
                 self.direction = None
                 self.moving = False
+
             else:
                 self.setdirection(self.targets[0].floornum)
 
