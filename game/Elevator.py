@@ -2,13 +2,12 @@ import pygame
 import random
 import math
 imgelv = "elv.png"
-a88=0
 sound1 = 'ding.mp3'
 class elevator:
     screen1=None
     pygame_initialized = False
     def __init__(self, screen, initialposx, floorheight, initial_ypos):
-        elevator.screen1=  (pygame.display.Info()).current_h-50
+        elevator.screen1=  (pygame.display.Info()).current_h
         elevator.pygame_initialized = True
         self.screen = screen
         self.ypos = initial_ypos
@@ -18,6 +17,7 @@ class elevator:
         self.myfloor = 0
         self.direction = None
         self.targets = []
+        
         self.passengers = []
         self .pusze=0
         pygame.mixer.init()
@@ -29,44 +29,51 @@ class elevator:
         originalimage = pygame.image.load(imgelv).convert_alpha()
         self.image = pygame.transform.scale(originalimage, (75, int(floorheight * 0.75)))
         self.rect = self.image.get_rect(topleft=(self.xpos, self.ypos))
+        self.timewait=0#לזכור לאפס
         
-    def addtarget(self, floor):
+    def addtarget(self, floor,sum):
         
         if floor not in self.targets:
             self.targets.append(floor)
-            self.targets.sort(key=lambda x: x.floornum, reverse=self.direction == 1)
+            
+            
         if self.direction is None:
             self.setdirection(floor.floornum)
-        floor.timewait=self.calculate_wait_time(self.targets,self.myfloor,floor.floornum,self.direction)
-    
-    def calculate_wait_time(self,targets, current_floor, new_floor, direction):
+        floor.timewait=sum
         
-        initial_distance = abs(current_floor - new_floor)
-        initial_wait_time = initial_distance * 0.5
-        index = 0
-        if direction == 1:
-            while index < len(targets) and targets[index].floornum > new_floor:
-                index += 1
+
+    def opt(self, targets, current_floor, new_floor):
+        if not targets:
+            return abs(current_floor - new_floor)*0.5
+        return targets[-1].timewait + 2 + abs(targets[-1].floornum - new_floor)#maybe for
+
+    
+    def timepass(self,current_ticks):
+        if self.pusze == 1:
+                
+                if current_ticks - self.time1 >= 2000:
+                    self.pusze = 0
+                return False
         else:
-            while index < len(targets) and targets[index].floornum < new_floor:
-                index += 1
-        
-        additional_wait_time = 2 * index
-        
-        return initial_wait_time + additional_wait_time
-
-
-
+                return True
 
     
-
+    def setfloor(self,y):
+        adjusted_y = abs(y - self.screen1)
+        a = math.floor(adjusted_y / self.floorheight)
+        if self.direction!=None:
+            if self.direction < 0:
+                a -= 1
+        return a
+    
     def setdirection(self, floornum):
         if self.myfloor < floornum:
             self.direction = -1
         elif self.myfloor > floornum:
             self.direction = +1
 
-    def move(self, dt):
+    def move(self):
+        p=False
         if self.time2 == 0:
             self.time3 = pygame.time.get_ticks()
             self.time2 = 1
@@ -75,7 +82,7 @@ class elevator:
         diftime = current_ticks - self.time3
         speed1 = (diftime / 500) * self.floorheight
         self.time3 = current_ticks
-
+    
         if not self.targets:
             return
         if self.direction is None:
@@ -83,23 +90,16 @@ class elevator:
 
         targetfloor = self.targets[0]
         diftime /= 1000
-        if self.pusze == 1:
-            
-            if current_ticks - self.time1 >= 2000:
-                self.pusze = 0
-        else:
+        if self.timepass(current_ticks):
             self.rect.y += self.direction * speed1
-           
+            
 
         for target in self.targets:#עובד רק בגיקסה הפשוטה
             
             target.timewait -= diftime
-        print(self.screen1)
-        adjusted_y = abs(self.rect.y - 1030)  
-        self.myfloor = math.floor(adjusted_y / self.floorheight)
-
-        if self.direction < 0:
-            self.myfloor -= 1
+        
+          
+        self.myfloor=self.setfloor(self.rect.y)
 
         if self.myfloor == targetfloor.floornum:
             self.dingsound.play()
@@ -107,20 +107,26 @@ class elevator:
             self.time1 = current_ticks
             self.pusze = 1
             targetfloor.timewait = 0
+            targetfloor.finish()
             self.targets.pop(0)
+            
+            
             if not self.targets:
                 self.direction = None
                 self.moving = False
 
+            else:
+                self.setdirection(self.targets[0].floornum)
 
 
-    def ismovingindirection(self, floornum, direction):
+
+    # def ismovingindirection(self, floornum, direction):
         
-        if self.direction is None:
-            return True
-        return (self.direction == 1 and self.myfloor > floornum) or (self.direction == -1 and self.myfloor < floornum)
-    if a88==0:
-        def ismovingindirection(self, floornum,a):
+    #     if self.direction is None:
+    #         return True
+    #     return (self.direction == 1 and self.myfloor > floornum) or (self.direction == -1 and self.myfloor < floornum)
+   
+    def ismovingindirection(self, floornum,a):
             if self.direction is None:
                 return True
 
