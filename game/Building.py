@@ -46,7 +46,7 @@ class building:
             
             if i.moving==True:
               i.move(dt)
-            i.draw()
+            
 
     def draw(self):
         for floor in self.floors:
