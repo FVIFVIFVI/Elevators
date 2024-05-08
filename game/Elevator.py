@@ -108,6 +108,7 @@ class elevator:
             self.pusze = 1
             targetfloor.timewait = 0
             self.targets.pop(0)
+            targetfloor.finish()
             if not self.targets:
                 self.direction = None
                 self.moving = False
