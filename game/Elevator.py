@@ -8,7 +8,7 @@ class elevator:
     screen1=None
     pygame_initialized = False
     def __init__(self, screen, initialposx, floorheight, initial_ypos):
-        elevator.screen1=  (pygame.display.Info()).current_h-50
+        elevator.screen1=  (pygame.display.Info()).current_h
         elevator.pygame_initialized = True
         self.screen = screen
         self.ypos = initial_ypos
@@ -95,7 +95,7 @@ class elevator:
             
             target.timewait -= diftime
         print(self.screen1)
-        adjusted_y = abs(self.rect.y - 1030)  
+        adjusted_y = abs(self.rect.y - self.screen1)  
         self.myfloor = math.floor(adjusted_y / self.floorheight)
 
         if self.direction < 0:
