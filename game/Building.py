@@ -16,13 +16,20 @@ class building:
     def __init__(self, screen, floorheight, floorwidth, numofelv=2, space=1,numfloors=25,p=0):
         self.numfloors=numfloors
         self.screen = screen
-        self.elevators = [elevator(screen, p+floorwidth//2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
-
-
+        #self.elevators = [elevator(screen, p+floorwidth//2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
+        self.elevators = [self.create_elevator(p + floorwidth//2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
+        self.elevatorsmove = []
+        self.floors = [self.create_floor(0 + p, (self.numfloors - 1 - i) * floorheight, floorheight, floorwidth//2, i) for i in range(self.numfloors)]
         self.numfloors=numfloors
-        self.floors = [floor(screen, 0+p, (self.numfloors - 1 - i) * floorheight, floorheight, floorwidth//2, i, self) for i in range(self.numfloors)]
+       # self.floors = [floor(screen, 0+p, (self.numfloors - 1 - i) * floorheight, floorheight, floorwidth//2, i, self) for i in range(self.numfloors)]
 
-        
+    def create_floor(self, posx, posy, height, width, floornum):
+        return FloorFactory.create_floor(self.screen, posx, posy, height, width, floornum, self)
+
+    def create_elevator(self, initialposx, floorheight, initial_ypos):
+        return ElevatorFactory.create_elevator(self.screen, initialposx, floorheight, initial_ypos)
+
+
     def update(self, floor):
         selectedelevator = self.elevators[0]
         mindistance = self.numfloors*20

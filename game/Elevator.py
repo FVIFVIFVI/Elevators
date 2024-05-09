@@ -1,6 +1,8 @@
 import pygame
 import random
 import math
+from ImageFactory import ImageFactory
+
 imgelv = "elv.png"
 a88=0
 sound1 = 'ding.mp3'
@@ -26,8 +28,7 @@ class elevator:
         self.time1=0
         self.time2=0
         self.time3=pygame.time.get_ticks()
-        originalimage = pygame.image.load(imgelv).convert_alpha()
-        self.image = pygame.transform.scale(originalimage, (75, int(floorheight * 0.75)))
+        self.image = ImageFactory.create_image(imgelv, 75, int(floorheight * 0.75))
         self.rect = self.image.get_rect(topleft=(self.xpos, self.ypos))
         
     def addtarget(self, floor):
