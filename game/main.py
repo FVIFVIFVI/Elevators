@@ -2,6 +2,11 @@
 import pygame
 from Building import building
 
+class BuildingFactory:
+    @staticmethod
+    def create_building(screen, floorheight, floorwidth, numofelv=2, space=1, numfloors=25, p=0):
+        return building(screen, floorheight, floorwidth, numofelv, space, numfloors, p)
+
 def run_game():
     pygame.init()
     info = pygame.display.Info()
@@ -9,7 +14,7 @@ def run_game():
     screen_width = info.current_h -50
     print(screen_width)  
     floor_height, floor_width, num_elevators,numfloors=  70, 200, 5,25
-    num_bul=3
+    num_bul=1
     
     screen = pygame.display.set_mode((screen_height, screen_width))
     pygame.display.set_caption('Building Simulation')

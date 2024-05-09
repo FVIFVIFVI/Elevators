@@ -34,7 +34,7 @@ class building:
         selectedelevator = self.elevators[0]
         mindistance = self.numfloors*20
         for elevator in self.elevators:
-            if elevator.myfloor==floor.floornum:
+            if elevator.myfloor==floor.floornum and not elevator.targets :
                 return True
             if elevator.ismovingindirection(floor.floornum, elevator.direction):
                 distance = abs(elevator.myfloor - floor.floornum)
