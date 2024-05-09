@@ -59,4 +59,5 @@ class building:
         for floor in self.floors:
             floor.draw()
         for elevator in self.elevators:
+            
             elevator.draw()
