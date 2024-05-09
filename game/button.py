@@ -5,12 +5,12 @@ class Button:
     def __init__(self, screen, posx, posy, width, height, text, shape="rect"):
         self.screen = screen
         self.posx = posx
-        self.posy = posy
+        self.posy = posy-5
         self.width = width
         self.height = height
         self.text = text
         self.shape = shape
-        self.rect = pygame.Rect(posx, posy, width, height)
+        self.rect = pygame.Rect(posx, posy-5, width, height)
         self.c = (255, 255, 255)
         self.Buttonpressed = False
 
