@@ -21,8 +21,3 @@ class ImageFactory:
         surface = pygame.Surface((width, height), pygame.SRCALPHA)
         surface.fill((0, 0, 0, alpha))
         return surface
-    @staticmethod
-    def create_ellipse_surface(width, height, color):
-        surface = pygame.Surface((width, height), pygame.SRCALPHA)
-        pygame.draw.ellipse(surface, color, surface.get_rect())
-        return surface

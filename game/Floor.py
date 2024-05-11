@@ -36,11 +36,10 @@ class floor:
 
     def checkclick(self, position):
         if self.button.checkclick(position) :
-            if self.call_elevator():
-              self.button.off_on()
+            self.call_elevator()
+
     def call_elevator(self):
-        if self.building.update(self):
-            return True
+        self.building.update(self)
 
     def finish(self):
         self.button.off_on()
