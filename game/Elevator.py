@@ -25,7 +25,7 @@ class elevator:
         self.moving = False
         self.time1=0
         self.time2=0
-        self.time3=pygame.time.get_ticks()
+        self.time_last_check=pygame.time.get_ticks()
         originalimage = pygame.image.load(imgelv).convert_alpha()
         self.image = pygame.transform.scale(originalimage, (75, int(floorheight * 0.75)))
         self.rect = self.image.get_rect(topleft=(self.xpos, self.ypos))
@@ -44,11 +44,34 @@ class elevator:
 
     def opt(self, targets, current_floor, new_floor):
         if not targets:
-            return abs(current_floor - new_floor)*0.5
+            aa=(pygame.time.get_ticks()-self.timewait)/1000
+            bb=0
+            if aa>0 and aa<=2:
+                bb=aa
+                print(aa)
+                self.timewait=0
+            return abs(current_floor - new_floor)*0.5+bb
         return targets[-1].timewait + 2 + abs(targets[-1].floornum - new_floor)#maybe for
 
     
-    def timepass(self,current_ticks):
+
+    def time_cul(self,index=0):
+        if self.first_time == 0:
+            self.time_last_check = pygame.time.get_ticks()
+            self.first_time = 1
+
+        current_ticks = pygame.time.get_ticks()
+        diftime = current_ticks - self.time_last_check
+        self.time_last_check = current_ticks
+    
+        diftime /= 1000
+        for target in  self.targets[index:]:
+            target.timewait -= diftime
+        return diftime*1000
+
+
+    def timepass(self,current_ticks=pygame.time.get_ticks()):
+        
         if self.pusze == 1:
                 
                 if current_ticks - self.time1 >= 2000:
@@ -75,13 +98,13 @@ class elevator:
     def move(self):
         p=False
         if self.time2 == 0:
-            self.time3 = pygame.time.get_ticks()
+            self.time_last_check = pygame.time.get_ticks()
             self.time2 = 1
 
         current_ticks = pygame.time.get_ticks()
-        diftime = current_ticks - self.time3
+        diftime = current_ticks - self.time_last_check
         speed1 = (diftime / 500) * self.floorheight
-        self.time3 = current_ticks
+        self.time_last_check = current_ticks
     
         if not self.targets:
             return
@@ -112,6 +135,7 @@ class elevator:
             
             
             if not self.targets:
+                self.timewait=self.time_last_check
                 self.direction = None
                 self.moving = False
 

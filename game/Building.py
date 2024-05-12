@@ -48,11 +48,15 @@ class building:
     def update1(self):
         for i in self.elevatorsmove:
             
-            if i.moving==True:
+            if i.moving==True :
               i.move()
+            elif i.timewait>0:
+             if i.timepass():
+                 i.timewait=0
+                 i.timepass()
             else:
                 self.elevatorsmove.remove(i)
-            i.draw()
+            
 
     def draw(self):
         for floor in self.floors:
