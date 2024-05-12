@@ -88,46 +88,88 @@ class elevator:
             self.direction = -1
         elif self.myfloor > floornum:
             self.direction = +1
+    
+    def movefree(self):
+            diftime= self.time_cul()
+            speed1 = (diftime / 500) * self.floorheight
+            diftime /= 1000
+            self.rect.y += self.direction * speed1
+            targetfloor = self.targets[0]
+        
+
+            self.myfloor = self.setfloor(self.rect.y)
+            if self.myfloor == targetfloor.floornum:
+                self.dingsound.play()
+                self.move_start_time = 0
+                self.pause_start_time = pygame.time.get_ticks()
+                self.is_paused = 1
+                targetfloor.timewait = 0
+                targetfloor.finish()
+                self.targets.pop(0)
+                self.timewait = self.time_last_check
+                self.setdirection(self.targets[0].floornum)
+
 
     def move(self):
-        current_ticks = pygame.time.get_ticks()
-        diftime=self.time_cul()
-        speed1 = (diftime / 500) * self.floorheight
+        if self.is_paused==0 and not self.targets:
+            self.direction = None
+            self.moving = False
+            return 2
+        if self.targets and self.is_paused==0:
+            self.movefree()
+        if not self.targets and self.is_paused==1:
+          self.timepass()
+          self.time_cul()
+        if self.targets and self.is_paused==1:
+          if self.timepass:
+              self.movefree()
+          else:
+              self.time_cul()
+        return 1
+
+
+
+
+
+    # def move(self):
+    #     current_ticks = pygame.time.get_ticks()
+    #     diftime=self.time_cul()
+    #     speed1 = (diftime / 500) * self.floorheight
         
-        diftime /= 1000
-        if self.timepass(current_ticks):
-           if self.direction is None:
-            return 
-           self.rect.y += self.direction * speed1
-        else:
-            return 1
+    #     diftime /= 1000
+    #     if self.timepass(current_ticks):
+    #        if self.direction is None:
+    #         return 
+    #        self.rect.y += self.direction * speed1
+    #     else:
+    #         return 1
         
         
-        if not self.targets:
-            return
+    #     if not self.targets:
+    #         return
         
-        targetfloor = self.targets[0]
+    #     targetfloor = self.targets[0]
         
 
-        self.myfloor = self.setfloor(self.rect.y)
-        if self.myfloor == targetfloor.floornum:
-            self.dingsound.play()
-            self.move_start_time = 0
-            self.pause_start_time = current_ticks
-            self.is_paused = 1
-            targetfloor.timewait = 0
-            targetfloor.finish()
-            self.targets.pop(0)
-            if not self.targets:
-                self.timewait = self.time_last_check
-                self.direction = None
-                self.moving = False
-            else:
-                self.setdirection(self.targets[0].floornum)
-            finish=not self.targets and self.is_paused==0
-            if finish:
-              return 2
-        return 3
+    #     self.myfloor = self.setfloor(self.rect.y)
+    #     if self.myfloor == targetfloor.floornum:
+    #         self.dingsound.play()
+    #         self.move_start_time = 0
+    #         self.pause_start_time = current_ticks
+    #         self.is_paused = 1
+    #         targetfloor.timewait = 0
+    #         targetfloor.finish()
+    #         self.targets.pop(0)
+    #         if not self.targets:
+    #             self.timewait = self.time_last_check
+    #             self.direction = None
+    #             self.moving = False
+    #         else:
+    #             self.setdirection(self.targets[0].floornum)
+    #         finish=not self.targets and self.is_paused==0
+    #         if finish:
+    #           return 2
+    #     return 3
 
     def ismovingindirection(self, floornum, ratio_f):
         if self.direction is None:
