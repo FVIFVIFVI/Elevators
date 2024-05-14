@@ -15,11 +15,17 @@ class floor:
         self.bricktexture = ImageFactory.create_image(image_floor, width, height)
         self.rect = self.bricktexture.get_rect(topleft=(posx, posy))
         posxb, posyb = posx + width - 80, posy + 10
-        self.button = ButtonFactory.create_button(screen, posxb, posyb, width // 2, height * 0.7, str(self.floornum), shape="ellipse")
+        #self.button = ButtonFactory.create_button(screen, posxb, posyb, width // 2, height * 0.7, str(self.floornum), shape="ellipse")
         new_rect = pygame.Rect(self.posx + self.width - 30, self.posy, 30, 20)
         self.transparent_surface = ImageFactory.create_transparent_surface(new_rect.width, new_rect.height, 128)
         self.transparent_surface_rect = self.transparent_surface.get_rect(topleft=new_rect.topleft)
         self.black_strip_rect = ImageFactory.create_rect(self.posx, self.posy + self.height - 3, self.width, 3)
+
+        button_width, button_height = width // 2, int(height * 0.7)
+        free_width = width - new_rect.width -2  
+        posxb = posx + (free_width - button_width)
+        posyb = posy + (height - button_height) // 2
+        self.button = ButtonFactory.create_button(screen, posxb, posyb, button_width, button_height, str(self.floornum), shape="ellipse")
 
     def draw(self):
         self.screen.blit(self.bricktexture, self.rect)

@@ -34,7 +34,6 @@ class elevator:
         self.timewait = 0
 
     def addtarget(self, floor, sum):
-        print("add")
         if floor not in self.targets:
             self.targets.append(floor)
         if self.direction is None:
@@ -91,7 +90,7 @@ class elevator:
         elif self.myfloor > floornum:
             self.direction = +1
     
-    def movefree(self):
+    def move_elevator(self):
             diftime= self.time_cul()
             speed1 = (diftime / 500) * self.floorheight
             diftime /= 1000
@@ -112,20 +111,22 @@ class elevator:
                  self.setdirection(self.targets[0].floornum)
                 else:
                     self.direction=None
+   
+   
     def move(self):
         if self.is_paused==0 and not self.targets:
             self.direction = None
             self.moving = False
             return 2
         if self.targets and self.is_paused==0:
-            self.movefree()
+            self.move_elevator()
         if not self.targets and self.is_paused==1:
             self.timepass(pygame.time.get_ticks())
             self.time_cul()
         if self.targets and self.is_paused==1:
-            a=self.timepass(pygame.time.get_ticks())
-            if a==True:
-                self.movefree()
+            time_pass=self.timepass(pygame.time.get_ticks())
+            if time_pass==True:
+                self.move_elevator()
             else:
                 self.time_cul()
         return 1
