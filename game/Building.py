@@ -21,7 +21,7 @@ class building:
         self.locatefloor = {i: floor for i, floor in enumerate(self.floors)}
         self.init_params = [screen, floorheight, floorwidth, numofelv, space, numfloors, p]
 
-    def restelv(self):
+    def reset_elevators(self):
         screen, floorheight, floorwidth, numofelv, space, numfloors, p = self.init_params
         self.elevators = [elevator(screen, p + floorwidth // 2 + j * 80, floorheight, (numfloors - 1) * floorheight) for j in range(numofelv)]
 
