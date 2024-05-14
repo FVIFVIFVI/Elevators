@@ -10,7 +10,7 @@ class elevator:
     pygame_initialized = False
     
     def __init__(self, screen, initialposx, floorheight, initial_ypos):
-        elevator.screen_height = (pygame.display.Info()).current_h
+        elevator.screen_height = screen.get_height()
         elevator.pygame_initialized = True
         self.screen = screen
         self.ypos = initial_ypos

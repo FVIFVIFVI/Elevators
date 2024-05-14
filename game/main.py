@@ -34,7 +34,9 @@ class ElevatorManagement:
             num_buildings = int(self.building_textbox.text)
         except ValueError:
             num_elevators, num_floors, num_buildings = 5, 25, 1
-
+        if self.screen_height / num_floors>110:
+            self.screen = pygame.display.set_mode((self.screen_width, 110*num_floors))
+            self.screen_height=110*num_floors                                     
         floor_height = self.screen_height / num_floors
         
         buildings = []
