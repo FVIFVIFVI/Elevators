@@ -12,6 +12,7 @@ class Button:
         self.rect = pygame.Rect(posx, posy, width, height)
         self.c=(255, 255, 255)
         self.Buttonpressed=False
+        self.active=False
     def set_shape(self):
         if self.shape == "rect":
             return pygame.draw.rect

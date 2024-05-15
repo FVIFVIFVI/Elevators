@@ -30,6 +30,8 @@ class building:
         minwaittime = float('inf')
         for elev in self.elevators:
             wait_time = elev.opt(elev.targets, elev.myfloor, floor.floornum)
+            if elev.myfloor==floor.floornum and elev.direction==None:
+                return 1
             if wait_time < minwaittime:
                 minwaittime = wait_time
                 selectedelevator = elev
