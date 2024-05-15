@@ -10,7 +10,7 @@ class elevator:
     pygame_initialized = False
     
     def __init__(self, screen, initialposx, floorheight, initial_ypos):
-        elevator.screen_height = (pygame.display.Info()).current_h
+        elevator.screen_height = screen.get_height()
         elevator.pygame_initialized = True
         self.screen = screen
         self.ypos = initial_ypos
@@ -92,7 +92,7 @@ class elevator:
     
     def move_elevator(self):
             diftime= self.time_cul()
-            speed1 = (diftime / 500) * self.floorheight
+            speed1 = (diftime / 500) * self.floorheight*1.1
             diftime /= 1000
             self.rect.y += self.direction * speed1
             targetfloor = self.targets[0]

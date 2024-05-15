@@ -45,7 +45,7 @@ class floor:
             self.call_elevator()
 
     def call_elevator(self):
-        self.building.update(self)
-
+        if self.building.update(self)==1:
+           self.button.off_on()
     def finish(self):
         self.button.off_on()
