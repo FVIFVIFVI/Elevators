@@ -46,9 +46,6 @@ class building:
             temp=i.move()
             if temp!=2:
                 continue
-            
-                
-           
             else:
                 self.elevatorsmove.remove(i)
 

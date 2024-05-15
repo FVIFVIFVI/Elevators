@@ -17,6 +17,7 @@ class TextBox:
             self.color = pygame.Color('dodgerblue2') if self.active else pygame.Color('lightskyblue3')
         if event.type == pygame.KEYDOWN:
             if self.active:
+                self.text=""
                 if event.key == pygame.K_RETURN:
                     self.active = False
                 elif event.key == pygame.K_BACKSPACE:

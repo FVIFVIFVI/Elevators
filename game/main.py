@@ -14,10 +14,11 @@ class ElevatorManagement:
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption('Building Simulation')
         self.clock = pygame.time.Clock()
-        width_box = 140
-        self.elevator_textbox = TextBox(self.screen_width * 0.3, 10, width_box, 32, '5')
-        self.floor_textbox = TextBox(self.screen_width * 0.3 + width_box + 20, 10, width_box, 32, '17')
-        self.building_textbox = TextBox(self.screen_width * 0.3 + (width_box + 20) * 2, 10, width_box, 32, '1')
+        width_box = 400
+        loction=self.screen_width*0.1
+        self.elevator_textbox = TextBox(loction, 10, width_box, 32, 'elevator')
+        self.floor_textbox = TextBox(loction + width_box + 20, 10, width_box, 32, 'floor')
+        self.building_textbox = TextBox(loction + (width_box + 20) * 2, 10, width_box, 32, 'building')
         self.textboxes = [self.elevator_textbox, self.floor_textbox, self.building_textbox]
 
         self.start_button = ButtonFactory.create_button(self.screen, self.screen_width - 180, 30, 150, 50, "Start", "rect")
@@ -45,7 +46,7 @@ class ElevatorManagement:
 
         self.buildings = buildings
         if self.rest1==0:
-            self.start_button.text="rest"
+            self.start_button.text="reset"
     def run(self):
         while self.running:
             for event in pygame.event.get():
