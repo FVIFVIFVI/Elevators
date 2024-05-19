@@ -26,8 +26,11 @@ class floor:
         free_width = width - new_rect.width - 2
         posxb = posx + (free_width - button_width)
         posyb = posy + (height - button_height) // 2
-        self.button = ButtonFactory.create_button(screen, posxb, posyb, button_width, button_height, str(self.floornum), shape="ellipse")
+        self.button = self.create_button(screen, posxb, posyb, button_width, button_height, str(self.floornum))
 
+    def create_button(self, screen, posx, posy, width, height, text):
+        return EllipseButton.create_button(screen, posx, posy, width, height, text)
+        
     def draw(self):
         self.screen.blit(self.bricktexture, self.rect)
         self.button.draw()
@@ -46,7 +49,7 @@ class floor:
             self.call_elevator()
 
     def call_elevator(self): # Receives the call from the keyboard through the main interface, updates the building, and gets an answer to light the button and in what color
-        The_answer_from_the_building = self.building.Choosing_optimal_elevator(self)
+        The_answer_from_the_building = self.building.choose_optimal_elevator(self)
         if The_answer_from_the_building == 1:
             self.button.off_on()
         if The_answer_from_the_building == 2:

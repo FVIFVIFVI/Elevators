@@ -7,3 +7,4 @@ or
 pip install math
 pip install pygame
 
+for all package  pip install -r requirements.txt

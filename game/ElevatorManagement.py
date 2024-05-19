@@ -1,6 +1,6 @@
-import pygame
+
 from User_Interface_Components.TextBox import TextBox
-from factory.ButtonFactory import ButtonFactory
+from factory.ButtonFactory import *
 
 from factory.buildingfactory import *
 class ElevatorManagement:
@@ -20,9 +20,7 @@ class ElevatorManagement:
         self.floor_textbox = TextBox(loction + width_box + 20, 10, width_box, 32, 'floor')
         self.building_textbox = TextBox(loction + (width_box + 20) * 2, 10, width_box, 32, 'building')
         self.textboxes = [self.elevator_textbox, self.floor_textbox, self.building_textbox]
-
-        self.start_button = ButtonFactory.create_button(self.screen, self.screen_width - 180, 30, 150, 50, "Start", "rect")
-
+        self.start_button = RectButton.create_button(self.screen, self.screen_width - 180, 30, 150, 50, "Start")
         self.running = True
         self.reset_simulation = False
         self.buildings = []
