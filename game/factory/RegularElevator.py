@@ -1,4 +1,4 @@
-from objects.Elevator import *
+from objects_abstract.Elevator import *
 
 class RegularElevator(Elevator):
     
