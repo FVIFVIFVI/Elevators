@@ -1,8 +1,9 @@
 To install the required packages for this project, run the following commands in your terminal:
+for all package  pip install -r requirements.txt
 
-For the math package:
+or
+
+
 pip install math
-pip install random
-
-For the pygame package:
 pip install pygame
+
