@@ -28,7 +28,7 @@ class ElevatorManagement:
         self.buildings = []
         self.simulation_started = False
 
-    def create_buildings(self):#מנסה לקבוע לפי הזנת המשתמש אבל אם הוא לא הקליד מספר חוקי חוזרים לברירת מחדל
+    def create_buildings(self):## Tries to set based on user input, but if an invalid number is entered, defaults to a preset value
         try:
             num_elevators = int(self.elevator_textbox.text)
             num_floors = int(self.floor_textbox.text)
