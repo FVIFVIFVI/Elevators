@@ -50,7 +50,4 @@ class RegularElevator(Elevator):
 
     def draw(self):
         self.screen.blit(self.image, self.rect)
-        font = pygame.font.Font(None, 36)
-        text_surface = font.render(str(self.rect.y), True, (0, 0, 0))
-        text_rect = text_surface.get_rect(center=(self.rect.centerx, self.rect.y + 20))
-        self.screen.blit(text_surface, text_rect)
+       
