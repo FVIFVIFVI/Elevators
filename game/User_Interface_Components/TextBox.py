@@ -7,7 +7,7 @@ class TextBox:
         self.text = text
         self.txt_surface = pygame.font.Font(None, 32).render(text, True, self.color)
         self.active = False
-
+        self.first=0
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
@@ -17,7 +17,9 @@ class TextBox:
             self.color = pygame.Color('dodgerblue2') if self.active else pygame.Color('lightskyblue3')
         if event.type == pygame.KEYDOWN:
             if self.active:
-                self.text=""
+                if self.first==0:
+                 self.text="  "
+                 self.first=1
                 if event.key == pygame.K_RETURN:
                     self.active = False
                 elif event.key == pygame.K_BACKSPACE:
