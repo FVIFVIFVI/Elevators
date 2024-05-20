@@ -15,7 +15,7 @@ class ElevatorManagement:
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption('Building Simulation')
         self.clock = pygame.time.Clock()
-        width_box = 400
+        width_box = 200
         location = self.screen_width * 0.1
         self.elevator_textbox = TextBox(location, 10, width_box, 32, 'elevator')
         self.floor_textbox = TextBox(location + width_box + 20, 10, width_box, 32, 'floor')
