@@ -1,4 +1,6 @@
 import pygame
+from factory.ShapeFactory import *
+
 
 class Button:
     def __init__(self, screen, posx, posy, width, height, text, shape="rect"):
@@ -14,21 +16,17 @@ class Button:
         self.Buttonpressed = False
         self.active = False
     
-    def set_shape(self):
-        if self.shape == "rect":
-            return pygame.draw.rect
-        elif self.shape == "ellipse":
-            return pygame.draw.ellipse
 
     def draw(self):
-        dshape = self.set_shape()
-        dshape(self.screen, (128, 128, 128), self.rect)
-        
+        shape_surface = ShapeFactory.create_shape(self.shape, width=self.width, height=self.height, color=(128, 128, 128))
+        self.screen.blit(shape_surface, (self.posx, self.posy))
         font = pygame.font.Font(None, 25)
         button_text = font.render(str(self.text), True, self.c)
         button_text_rect = button_text.get_rect(center=self.rect.center)
         self.screen.blit(button_text, button_text_rect)
 
+
+    #light switch
     def off_on(self):
         self.Buttonpressed = not self.Buttonpressed
         if self.Buttonpressed:
@@ -36,8 +34,11 @@ class Button:
         else:
             self.c = (255, 255, 255)
 
+
+    #A case of an error in elevator allocation
     def set_error(self):
         self.c = (255, 0, 0)
+
 
     def checkclick(self, position):
         if self.rect.collidepoint(position):

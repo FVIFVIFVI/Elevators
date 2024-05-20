@@ -1,53 +1,60 @@
 import pygame
 from User_Interface_Components.TextBox import TextBox
 from factory.ButtonFactory import ButtonFactory
+from factory.Buildingfactory import *
 
-from factory.buildingfactory import *
 class ElevatorManagement:
+    # Function to initialize the ElevatorManagement class
     def __init__(self):
         pygame.init()
         info = pygame.display.Info()
         self.screen_width = info.current_w - 50
         self.screen_height = info.current_h - 100
         self.floor_width = 200
-        self.rest1=0
+        self.rest1 = 0
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption('Building Simulation')
         self.clock = pygame.time.Clock()
         width_box = 400
-        loction=self.screen_width*0.1
-        self.elevator_textbox = TextBox(loction, 10, width_box, 32, 'elevator')
-        self.floor_textbox = TextBox(loction + width_box + 20, 10, width_box, 32, 'floor')
-        self.building_textbox = TextBox(loction + (width_box + 20) * 2, 10, width_box, 32, 'building')
+        location = self.screen_width * 0.1
+        self.elevator_textbox = TextBox(location, 10, width_box, 32, 'elevator')
+        self.floor_textbox = TextBox(location + width_box + 20, 10, width_box, 32, 'floor')
+        self.building_textbox = TextBox(location + (width_box + 20) * 2, 10, width_box, 32, 'building')
         self.textboxes = [self.elevator_textbox, self.floor_textbox, self.building_textbox]
-
         self.start_button = ButtonFactory.create_button(self.screen, self.screen_width - 180, 30, 150, 50, "Start", "rect")
-
         self.running = True
         self.reset_simulation = False
         self.buildings = []
         self.simulation_started = False
 
-    def create_buildings(self):#מנסה לקבוע לפי הזנת המשתמש אבל אם הוא לא הקליד מספר חוקי חוזרים לברירת מחדל
+
+    # Function to create buildings based on user input, with default values if input is invalid
+    def create_buildings(self):
         try:
             num_elevators = int(self.elevator_textbox.text)
             num_floors = int(self.floor_textbox.text)
             num_buildings = int(self.building_textbox.text)
-        except ValueError:
+        
+        except ValueError: 
             num_elevators, num_floors, num_buildings = 5, 25, 2
         
+        # Maximum size per floor
         if self.screen_height / num_floors > 110:
             self.screen = pygame.display.set_mode((self.screen_width, 110 * num_floors))
             self.screen_height = 110 * num_floors
-        
+       
+        # Relative height per floor
         floor_height = self.screen_height / num_floors
+        
+        #init buildings
         self.buildings = [
             BuildingFactory.create_building(self.screen, floor_height, self.floor_width, num_elevators, 1, num_floors, (self.floor_width // 2 + num_elevators * 80 + 40) * i)
-            for i in range(num_buildings)
-        ]
-        
+            for i in range(num_buildings)]
         if self.rest1 == 0:
             self.start_button.text = "reset"
+
+
+    # Main loop to run the simulation
     def run(self):
         while self.running:
             for event in pygame.event.get():
@@ -60,7 +67,7 @@ class ElevatorManagement:
                         for bld in self.buildings:
                             for floor in bld.floors:
                                 floor.checkclick(event.pos)
-                
+                # Reset button was pressed
                 if not self.simulation_started:
                     for textbox in self.textboxes:
                         textbox.handle_event(event)
@@ -86,6 +93,7 @@ class ElevatorManagement:
 
 
 class ElevatorManagementFactory:
+    # Static method to create an instance of ElevatorManagement
     @staticmethod
     def create_elevator_management():
         return ElevatorManagement()
