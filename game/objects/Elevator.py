@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+from factory.ShapeFactory import ShapeFactory
 
 imgelv = "game/images and sounds/Elevator.png"
 sound1 = 'game/images and sounds/ding.mp3'
@@ -8,7 +9,7 @@ sound1 = 'game/images and sounds/ding.mp3'
 class elevator:
     screen_height = None
     pygame_initialized = False
-    
+
     def __init__(self, screen, initialposx, floorheight, initial_ypos):
         elevator.screen_height = screen.get_height()
         elevator.pygame_initialized = True
@@ -28,14 +29,14 @@ class elevator:
         self.pause_start_time = 0
         self.move_start_time = 0
         self.time_last_check = pygame.time.get_ticks()
-        originalimage = pygame.image.load(imgelv).convert_alpha()
-        self.image = pygame.transform.scale(originalimage, (75, int(floorheight * 0.75)))
+        originalimage = ShapeFactory.create_shape('image', image_path=imgelv, width=75, height=int(floorheight * 0.75))
+        self.image = originalimage
         self.rect = self.image.get_rect(topleft=(self.xpos, self.ypos))
         self.timewait = 0
 
+    # 1. Set the wait time for the calling floor
+    # 2. Determine the direction to know whether to add or subtract when adding a target
     def addtarget(self, floor, sum):
-       # 1. Set the wait time for the calling floor
-       # 2. Determine the direction to know whether to add or subtract when adding a target
         if floor not in self.targets:
             self.targets.append(floor)
         if self.direction is None:
@@ -44,9 +45,9 @@ class elevator:
             self.move_start_time = 0
         floor.timewait = sum
 
+    # If there are no targets, first check if 2 seconds have passed since the elevator stopped.
+    # If not, add the time. Otherwise, the optimal time is the optimal time of the last stop -> opt(n) = opt(n-1) + 2 + dist
     def opt(self, targets, current_floor, new_floor):
-        # If there are no targets, first check if 2 seconds have passed since the elevator stopped.
-        # If not, add the time. Otherwise, the optimal time is the optimal time of the last stop -> opt(n) = opt(n-1) + 2 + dist
         if not targets:
             temptime = pygame.time.get_ticks()
             dift = 2 - ((temptime - self.pause_start_time) / 1000)
@@ -62,7 +63,6 @@ class elevator:
         if self.move_start_time == 0:
             self.time_last_check = pygame.time.get_ticks()
             self.move_start_time = 1
-        
         diftime = current_ticks - self.time_last_check
         self.time_last_check = current_ticks
         diftime /= 1000
@@ -71,7 +71,8 @@ class elevator:
             target.timewait -= diftime
         return diftime * 1000
 
-    def timepass(self, current_ticks=pygame.time.get_ticks()): # Check if 2 seconds have passed since stopping
+    # Check if 2 seconds have passed since stopping
+    def timepass(self, current_ticks=pygame.time.get_ticks()): 
         if self.is_paused == 1:
             if current_ticks - self.pause_start_time >= 2000:
                 self.is_paused = 0
@@ -81,7 +82,8 @@ class elevator:
         else:
             return True
 
-    def setfloor(self, y): # Set the floor based on the y value
+    # Set the floor based on the y value
+    def setfloor(self, y): 
         adjusted_y = abs(y - self.screen_height)
         ratio_f = math.floor(adjusted_y / self.floorheight)
         if self.direction != None:
@@ -89,13 +91,15 @@ class elevator:
                 ratio_f -= 1
         return ratio_f
 
-    def setdirection(self, floornum): # Determine if the elevator is going up or down
+    # Determine if the elevator is going up or down
+    def setdirection(self, floornum): 
         if self.myfloor < floornum:
             self.direction = -1
         elif self.myfloor > floornum:
             self.direction = +1
-    
-    def move_elevator(self): # The function first checks how much time has passed and sets the amount of y to move relative to the elapsed time from half a second
+
+    # The function first checks how much time has passed and sets the amount of y to move relative to the elapsed time from half a second
+    def move_elevator(self): 
         diftime = self.time_cul()
         speed1 = (diftime / 500) * self.floorheight * 1.1
         diftime /= 1000
@@ -117,7 +121,8 @@ class elevator:
             else:
                 self.direction = None
    
-    def update(self): # Decision function for different cases. The most complicated is when there are no targets but the elevator is still waiting
+    # Decision function for different cases. The most complicated is when there are no targets but the elevator is still waiting
+    def update(self): 
         if self.is_paused == 0 and not self.targets:
             self.direction = None
             self.moving = False

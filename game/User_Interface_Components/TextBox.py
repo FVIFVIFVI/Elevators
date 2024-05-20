@@ -1,13 +1,16 @@
 import pygame
 
 class TextBox:
+    # Function to initialize the TextBox class
     def __init__(self, x, y, w, h, text=''):
         self.rect = pygame.Rect(x, y, w, h)
         self.color = pygame.Color('lightskyblue3')
         self.text = text
         self.txt_surface = pygame.font.Font(None, 32).render(text, True, self.color)
         self.active = False
-        self.first=0
+        self.first = 0
+    
+    # Function to handle events for the TextBox
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
@@ -17,9 +20,9 @@ class TextBox:
             self.color = pygame.Color('dodgerblue2') if self.active else pygame.Color('lightskyblue3')
         if event.type == pygame.KEYDOWN:
             if self.active:
-                if self.first==0:
-                 self.text="  "
-                 self.first=1
+                if self.first == 0:#first press
+                    self.text = "  "
+                    self.first = 1
                 if event.key == pygame.K_RETURN:
                     self.active = False
                 elif event.key == pygame.K_BACKSPACE:
