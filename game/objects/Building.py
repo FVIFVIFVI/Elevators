@@ -30,7 +30,7 @@ class Building:
         
         # Add to the target list of the selected elevator
         # Additionally, we pass the arrival time calculated by opt
-        selected_elevator.add_target(floor, min_wait_time)
+        selected_elevator.addtarget(floor, min_wait_time)
         if not selected_elevator.moving: # We have a list of elevators that need to move, so we avoid going over all irrelevant elevators
             self.elevators_move.append(selected_elevator)
         selected_elevator.moving = True

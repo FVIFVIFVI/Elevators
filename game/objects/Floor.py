@@ -46,7 +46,7 @@ class floor:
             self.call_elevator()
 
     def call_elevator(self): # Receives the call from the keyboard through the main interface, updates the building, and gets an answer to light the button and in what color
-        The_answer_from_the_building = self.building.Choosing_optimal_elevator(self)
+        The_answer_from_the_building = self.building.choose_optimal_elevator(self)
         if The_answer_from_the_building == 1:
             self.button.off_on()
         if The_answer_from_the_building == 2:
