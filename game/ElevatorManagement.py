@@ -67,11 +67,13 @@ class ElevatorManagement:
                         for bld in self.buildings:
                             for floor in bld.floors:
                                 floor.checkclick(event.pos)
-                # Reset button was pressed
+                
+                #Creating text boxes, only if the button is never clicked
                 if not self.simulation_started:
                     for textbox in self.textboxes:
                         textbox.handle_event(event)
-
+                        
+            # Reset button was pressed
             if self.reset_simulation:
                 self.create_buildings()
                 self.start_button.off_on()
