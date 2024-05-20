@@ -44,5 +44,5 @@ class Button:
         if self.rect.collidepoint(position):
             if not self.Buttonpressed:
                 self.off_on()
-            return True
+                return True
         return False
