@@ -1,101 +1,155 @@
 import pygame
-from User_Interface_Components.TextBox import TextBox
 from factory.ButtonFactory import ButtonFactory
-from factory.Buildingfactory import *
+from factory.buildingfactory import BuildingFactory
+from SetupScreen import InitialSetupScreen
+
+# --- ייבוא BuildingLayout ---
+# שנה את השורה הבאה כדי לייבא את BuildingLayout מהמיקום הנכון בפרויקט שלך
+# לדוגמה: from building_layout_module import BuildingLayout
+# או אם BuildingLayout מוגדר בקובץ שנגיש ישירות:
+# from BuildingLayout import BuildingLayout # אם זה שם הקובץ והקלאס
+# אם BuildingLayout מוגדר באותו קובץ כמו ElevatorManagement (פחות סביר בהינתן ההפרדה לקבצים), אין צורך בייבוא.
+# לצורך הדגמה, אניח שיש קובץ building_layout.py שממנו ניתן לייבא.
+# **הערה חשובה:** החלף את השורה הבאה בייבוא הנכון שלך!
+from BuildingLayout import BuildingLayout # <--- שנה ייבוא זה בהתאם למבנה הפרויקט שלך
 
 class ElevatorManagement:
-    # Function to initialize the ElevatorManagement class
-    def __init__(self):
+    def __init__(self): # החתימה חזרה למקורית, ללא פרמטרים
+        self.screen = None
+        self.screen_width = 0
+        self.screen_height = 0
+        
+        self.floor_width = 200
+        # ElevatorManagement ישתמש ישירות בקלאס BuildingLayout המיובא
+        self.building_layout_class_ref = BuildingLayout 
+
+        self.clock = None
+        self.buildings = []
+        self.running = True
+        self.simulation_started = False
+        self.needs_reconfiguration = True
+
+        self.num_elevators = 0
+        self.num_floors = 0
+        self.actual_num_buildings = 0
+        self.calculated_floor_height = 0
+        self.building_start_x_coords = []
+        
+        self.reconfigure_button = None
+
+    def perform_initial_setup(self):
         pygame.init()
         info = pygame.display.Info()
-        self.screen_width = info.current_w - 50
-        self.screen_height = info.current_h - 100
-        self.floor_width = 200
-        self.rest1 = 0
+        target_screen_width = info.current_w - 50
+        target_screen_height = info.current_h - 100
+
+        setup_screen = InitialSetupScreen(
+            target_screen_width, 
+            target_screen_height, 
+            self.floor_width,
+            self.building_layout_class_ref # מעביר את הקלאס BuildingLayout שייבאנו
+        )
+        params = setup_screen.get_simulation_parameters()
+
+        if params is None:
+            self.running = False
+            return False
+
+        (self.num_elevators, self.num_floors, self.actual_num_buildings,
+         self.calculated_floor_height, adjusted_main_screen_height, self.building_start_x_coords) = params
+
+        self.screen_width = target_screen_width
+        self.screen_height = adjusted_main_screen_height
+
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption('Building Simulation')
         self.clock = pygame.time.Clock()
-        width_box = 200
-        location = self.screen_width * 0.1
-        self.elevator_textbox = TextBox(location, 10, width_box, 32, 'elevator')
-        self.floor_textbox = TextBox(location + width_box + 20, 10, width_box, 32, 'floor')
-        self.building_textbox = TextBox(location + (width_box + 20) * 2, 10, width_box, 32, 'building')
-        self.textboxes = [self.elevator_textbox, self.floor_textbox, self.building_textbox]
-        self.start_button = ButtonFactory.create_button(self.screen, self.screen_width - 180, 30, 150, 50, "Start", "rect")
-        self.running = True
-        self.reset_simulation = False
+
+        if self.screen:
+             self.reconfigure_button = ButtonFactory.create_button(
+                 self.screen, self.screen_width - 180, 10, 150, 40,
+                 "Reconfigure", "rect"
+             )
+        return True
+
+    def create_buildings_from_params(self):
         self.buildings = []
-        self.simulation_started = False
+        if self.actual_num_buildings == 0:
+            return
 
+        if self.calculated_floor_height <= 0 and self.num_floors > 0:
+             return
 
-    # Function to create buildings based on user input, with default values if input is invalid
-    def create_buildings(self):
-        try:
-            num_elevators = int(self.elevator_textbox.text)
-            num_floors = int(self.floor_textbox.text)
-            num_buildings = int(self.building_textbox.text)
+        for i in range(self.actual_num_buildings):
+            start_x = self.building_start_x_coords[i]
+            building = BuildingFactory.create_building(
+                self.screen,
+                self.calculated_floor_height,
+                self.floor_width,
+                self.num_elevators,
+                1, 
+                self.num_floors,
+                start_x
+            )
+            self.buildings.append(building)
         
-        except ValueError: 
-            num_elevators, num_floors, num_buildings = 5, 25, 2
-        
-        # Maximum size per floor
-        if self.screen_height / num_floors > 110:
-            self.screen = pygame.display.set_mode((self.screen_width, 110 * num_floors))
-            self.screen_height = 110 * num_floors
-       
-        # Relative height per floor
-        floor_height = self.screen_height / num_floors
-        
-        #init buildings
-        self.buildings = [
-            BuildingFactory.create_building(self.screen, floor_height, self.floor_width, num_elevators, 1, num_floors, (self.floor_width // 2 + num_elevators * 80 + 40) * i)
-            for i in range(num_buildings)]
-        if self.rest1 == 0:
-            self.start_button.text = "reset"
+        self.simulation_started = True
 
-
-    # Main loop to run the simulation
     def run(self):
         while self.running:
+            if self.needs_reconfiguration:
+                setup_successful = self.perform_initial_setup()
+                if not setup_successful:
+                    if not self.running:
+                        break 
+                
+                if self.screen:
+                    self.create_buildings_from_params()
+                    self.needs_reconfiguration = False
+                else:
+                    self.running = False 
+                    break
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if self.start_button.checkclick(event.pos):
-                        self.reset_simulation = True
-                    if self.simulation_started:
-                        for bld in self.buildings:
-                            for floor in bld.floors:
-                                floor.checkclick(event.pos)
                 
-                #Creating text boxes, only if the button is never clicked
-                if not self.simulation_started:
-                    for textbox in self.textboxes:
-                        textbox.handle_event(event)
-                        
-            # Reset button was pressed
-            if self.reset_simulation:
-                self.create_buildings()
-                self.start_button.off_on()
-                self.reset_simulation = False
-                self.simulation_started = True
+                clicked_on_button = False
+                if self.screen and self.reconfigure_button and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if self.reconfigure_button.checkclick(event.pos):
+                        self.needs_reconfiguration = True
+                        clicked_on_button = True
+                
+                if self.simulation_started and not self.needs_reconfiguration and not clicked_on_button:
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                        for bld in self.buildings:
+                            if hasattr(bld, 'floors'):
+                                for floor in bld.floors:
+                                    if hasattr(floor, 'checkclick'):
+                                        floor.checkclick(event.pos)
             
-            self.screen.fill((255, 255, 255))
-            for bld in self.buildings:
-                bld.draw()
-                bld.update()
-            self.start_button.draw()
-            if not self.simulation_started:
-                for textbox in self.textboxes:
-                    textbox.draw(self.screen)
-            pygame.display.flip()
-            self.clock.tick(60)
+            if not self.running:
+                break
+
+            if self.screen and not self.needs_reconfiguration:
+                self.screen.fill((255, 255, 255))
+                for bld in self.buildings:
+                    if hasattr(bld, 'draw'): bld.draw()
+                    if hasattr(bld, 'update'): bld.update()
+                
+                if self.reconfigure_button:
+                    self.reconfigure_button.draw()
+                
+                pygame.display.flip()
+                if self.clock:
+                    self.clock.tick(60)
+            elif self.needs_reconfiguration and self.running:
+                pass
 
         pygame.quit()
 
 
 class ElevatorManagementFactory:
-    # Static method to create an instance of ElevatorManagement
     @staticmethod
-    def create_elevator_management():
+    def create_elevator_management(): # החתימה חזרה למקורית, ללא פרמטרים
         return ElevatorManagement()
