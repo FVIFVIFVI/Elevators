@@ -2,7 +2,7 @@ import pygame
 import random
 import math
 from factory.ShapeFactory import ShapeFactory
-
+# from cloock import clock
 imgelv = "game/images and sounds/Elevator.png"
 sound1 = 'game/images and sounds/ding.mp3'
 
@@ -23,6 +23,7 @@ class elevator:
         self.targets = []
         self.passengers = []
         self.is_paused = 0
+        self.func_update=self.update_when_moving#צריך להיות פונקציה לא קריאה לפונקציה 
         pygame.mixer.init()
         self.dingsound = pygame.mixer.Sound(sound1)
         self.moving = False
@@ -76,6 +77,7 @@ class elevator:
         if self.is_paused == 1:
             if current_ticks - self.pause_start_time >= 2000:
                 self.is_paused = 0
+                self.func_update = self.update_when_moving
                 return True
             else:
                 return False
@@ -107,11 +109,13 @@ class elevator:
         targetfloor = self.targets[0]
         # In case we reached the floor, we need to update the new target, turn off the button, and update that we need to wait
         self.myfloor = self.setfloor(self.rect.y)
-        if self.myfloor == targetfloor.floornum:
+        if self.myfloor == targetfloor.floornum:#אולי נוסיף פה גם עיגול מיקום בפועל 
             self.dingsound.play()
             self.move_start_time = 0
             self.pause_start_time = pygame.time.get_ticks()
             self.is_paused = 1
+            self.func_update = self.update_when_stopped
+            
             targetfloor.timewait = 0
             targetfloor.finish()
             self.targets.pop(0)
@@ -123,22 +127,27 @@ class elevator:
    
     # Decision function for different cases. The most complicated is when there are no targets but the elevator is still waiting
     def update(self): 
-        if self.is_paused == 0 and not self.targets:
+       self.func_update()
+       return 1
+    
+    def update_when_moving(self):
+        if  self.targets:
+            self.move_elevator()
+        else:
             self.direction = None
             self.moving = False
-            return 2
-        if self.targets and self.is_paused == 0:
-            self.move_elevator()
-        if not self.targets and self.is_paused == 1:
+    
+    def update_when_stopped(self):
+        if not self.targets:
             self.timepass(pygame.time.get_ticks())
             self.time_cul()
-        if self.targets and self.is_paused == 1:
+        if self.targets:
             time_pass = self.timepass(pygame.time.get_ticks())
             if time_pass == True:
                 self.move_elevator()
             else:
                 self.time_cul()
-        return 1
+
 
     def draw(self):
         self.screen.blit(self.image, self.rect)

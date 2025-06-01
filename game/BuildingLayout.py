@@ -18,6 +18,8 @@ class BuildingLayout:
         
         self.bulding_loction = []
         self.building_boundaries = []
+        self.bound_bulding = {}
+        
         
         actual_buildings_that_fit = 0
         # Calculate positions and check if they fit horizontally
@@ -36,6 +38,7 @@ class BuildingLayout:
                 actual_buildings_that_fit += 1
             else:
                 # Stop if a building doesn't fit; further buildings also won't.
+                self.bound_bulding["error"] = f"Building does not fit the last building is {i}"
                 break 
         self.num_buildings = actual_buildings_that_fit # The actual number of buildings created
 
@@ -83,6 +86,8 @@ class BuildingLayout:
         #    return 0
         # return self.stride_width_per_building * (self.num_buildings -1) + self.floor_width
         # The self.building_boundaries[-1]['x2'] is more direct from the calculated data.
+        
+    
 
     def WHERE_IS_POSITION(self, x, y): # y is not used by this specific boundary check
         low = 0
@@ -103,3 +108,5 @@ class BuildingLayout:
                 low = mid + 1
         
         return None # Not found in any building
+    
+    

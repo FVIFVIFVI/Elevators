@@ -1,5 +1,6 @@
 from factory.FloorFactory import *
 from factory.ElevatorFactory import *
+from itertools import chain
 
 class Building:
     def __init__(self, screen, floor_height, floor_width, num_of_elevators=2, space=1, num_floors=25, offset=0):
@@ -49,7 +50,9 @@ class Building:
 
 
     def draw(self):
-        for floor in self.floors:
-            floor.draw()
-        for elev in self.elevators:
-            elev.draw()
+        for obj in chain(self.floors, self.elevators):
+            obj.draw()
+        # for floor in self.floors:
+        #     floor.draw()
+        # for elev in self.elevators:
+        #     elev.draw()
