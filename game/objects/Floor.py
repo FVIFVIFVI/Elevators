@@ -5,7 +5,7 @@ import pygame
 image_floor = 'game/images and sounds/floor.png'
 
 class Floor:
-    def __init__(self, screen, posx, posy, height, width, floornum, building):
+    def __init__(self, screen, posx, posy, height, width, floornum, building,func):
         self.screen = screen
         self.posx = posx
         self.posy = posy
@@ -20,13 +20,14 @@ class Floor:
         self.transparent_surface = ShapeFactory.create_shape('transparent_surface', width=new_rect.width, height=new_rect.height, alpha=128)
         self.transparent_surface_rect = self.transparent_surface.get_rect(topleft=new_rect.topleft)
         self.black_strip_rect = pygame.Rect(posx, posy + height - 3, width, 3)
+        self.func= func  # Function to call when the button is clicked
         
         #Calculation of button position
         button_width, button_height = width // 2, int(height * 0.7)
         free_width = width - new_rect.width - 2
         posxb = posx + (free_width - button_width)
         posyb = posy + (height - button_height) // 2
-        self.button = ButtonFactory.create_button(screen, posxb, posyb, button_width, button_height, str(floornum), shape="ellipse")
+        self.button = ButtonFactory.create_button(screen, posxb, posyb, button_width, button_height, str(floornum), self.func, shape="ellipse")
 
 
     def draw(self):
@@ -43,17 +44,15 @@ class Floor:
     
     #check event from user
     def checkclick(self, position):
-        if self.button.checkclick(position):
-            self.call_elevator()
+        
+         press=self.button.checkclick_and_run(position, onclick=True, floor=self)
+         if press:
+            self.button.func=None
+            self.button.checkclick_and_run(position,onclickfunc=True)
+                
 
 
-    def call_elevator(self):
-        answer_from_building = self.building.choose_optimal_elevator(self)
-        if answer_from_building == 1:
-            self.button.off_on()
-        elif answer_from_building == 2:
-            self.button.set_error()
-    
+   
 
     #Turn off button lighting
     def finish(self):

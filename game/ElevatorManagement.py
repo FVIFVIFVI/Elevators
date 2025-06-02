@@ -3,16 +3,8 @@ from factory.ButtonFactory import ButtonFactory
 from factory.buildingfactory import BuildingFactory
 from SetupScreen import InitialSetupScreen
 
-# --- ייבוא BuildingLayout ---
-# שנה את השורה הבאה כדי לייבא את BuildingLayout מהמיקום הנכון בפרויקט שלך
-# לדוגמה: from building_layout_module import BuildingLayout
-# או אם BuildingLayout מוגדר בקובץ שנגיש ישירות:
-# from BuildingLayout import BuildingLayout # אם זה שם הקובץ והקלאס
-# אם BuildingLayout מוגדר באותו קובץ כמו ElevatorManagement (פחות סביר בהינתן ההפרדה לקבצים), אין צורך בייבוא.
-# לצורך הדגמה, אניח שיש קובץ building_layout.py שממנו ניתן לייבא.
-# **הערה חשובה:** החלף את השורה הבאה בייבוא הנכון שלך!
-from BuildingLayout import BuildingLayout # <--- שנה ייבוא זה בהתאם למבנה הפרויקט שלך
 
+from BuildingLayout import BuildingLayout #
 class ElevatorManagement:
     def __init__(self): # החתימה חזרה למקורית, ללא פרמטרים
         self.screen = None
@@ -151,5 +143,5 @@ class ElevatorManagement:
 
 class ElevatorManagementFactory:
     @staticmethod
-    def create_elevator_management(): # החתימה חזרה למקורית, ללא פרמטרים
+    def create_elevator_management(): 
         return ElevatorManagement()

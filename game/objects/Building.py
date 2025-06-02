@@ -8,7 +8,7 @@ class Building:
         self.screen = screen
         self.elevators = [ElevatorFactory.create_elevator(screen, offset + floor_width // 2 + j * 80, floor_height, (num_floors - 1) * floor_height) for j in range(num_of_elevators)]
         self.elevators_move = []
-        self.floors = [FloorFactory.create_floor(screen, 0 + offset, (self.num_floors - 1 - i) * floor_height, floor_height, floor_width // 2, i, self) for i in range(self.num_floors)]
+        self.floors = [FloorFactory.create_floor(screen, 0 + offset, (self.num_floors - 1 - i) * floor_height, floor_height, floor_width // 2, i, self,self.choose_optimal_elevator) for i in range(self.num_floors)]
         self.locate_floor = {i: floor for i, floor in enumerate(self.floors)}
         self.init_params = [screen, floor_height, floor_width, num_of_elevators, space, num_floors, offset]  # Saved for reset purposes
     

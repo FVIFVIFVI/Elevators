@@ -3,7 +3,7 @@ from factory.ShapeFactory import *
 
 
 class Button:
-    def __init__(self, screen, posx, posy, width, height, text, shape="rect"):
+    def __init__(self, screen, posx, posy, width, height, text,func, shape="rect"):
         self.screen = screen
         self.posx = posx
         self.posy = posy
@@ -15,6 +15,7 @@ class Button:
         self.c = (255, 255, 255)
         self.Buttonpressed = False
         self.active = False
+        self.func = func
     
 
     def draw(self):
@@ -43,6 +44,25 @@ class Button:
     def checkclick(self, position):
         if self.rect.collidepoint(position):
             if not self.Buttonpressed:
-                self.off_on()
+                
                 return True
         return False
+    def checkclick_and_run(self, position, onclick=True, onclickfunc=None, **object):
+        print("checkclick_and_run")
+        if not self.func and onclickfunc:
+            self.c = (50, 205, 50)
+            print("Button function is None, returning")
+            return
+        if self.checkclick(position):
+            print("Button clicked")
+            answer_from= self.func(**object)
+            print("answer_from", answer_from)
+            if answer_from == 1:
+             self.off_on()
+            elif answer_from == 2:
+             self.button.set_error()
+            return True
+        
+        return False
+
+
