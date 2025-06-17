@@ -56,6 +56,7 @@ class Button:
         if self.checkclick(position):
             print("Button clicked")
             answer_from= self.func(**object)
+            self.off_on()
             print("answer_from", answer_from)
             if answer_from == 1:
              self.off_on()

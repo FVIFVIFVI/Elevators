@@ -1,6 +1,5 @@
 git rm --cached *.pyc
 git rm --cached */__pycache__/* # אם יש קבצים בתוך תיקיות __pycache__ שכבר במעקב
-# ואז לעשות commit לשינוי הזה
 git commit -m "Remove compiled Python files from tracking"
 game/User_Interface_Components/__pycache__/TextBox.cpython-311.pyc
 game/User_Interface_Components/__pycache__/ImageFactory.cpython-311.pyc

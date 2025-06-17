@@ -3,16 +3,14 @@ from factory.ButtonFactory import ButtonFactory
 from factory.buildingfactory import BuildingFactory
 from SetupScreen import InitialSetupScreen
 
-
-from BuildingLayout import BuildingLayout #
+from BuildingLayout import BuildingLayout
 class ElevatorManagement:
-    def __init__(self): # החתימה חזרה למקורית, ללא פרמטרים
+    def __init__(self):
         self.screen = None
         self.screen_width = 0
         self.screen_height = 0
         
         self.floor_width = 200
-        # ElevatorManagement ישתמש ישירות בקלאס BuildingLayout המיובא
         self.building_layout_class_ref = BuildingLayout 
 
         self.clock = None
@@ -28,6 +26,7 @@ class ElevatorManagement:
         self.building_start_x_coords = []
         
         self.reconfigure_button = None
+        self.building_layout_instance = None # Add an instance of BuildingLayout
 
     def perform_initial_setup(self):
         pygame.init()
@@ -39,7 +38,7 @@ class ElevatorManagement:
             target_screen_width, 
             target_screen_height, 
             self.floor_width,
-            self.building_layout_class_ref # מעביר את הקלאס BuildingLayout שייבאנו
+            self.building_layout_class_ref
         )
         params = setup_screen.get_simulation_parameters()
 
@@ -56,6 +55,17 @@ class ElevatorManagement:
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption('Building Simulation')
         self.clock = pygame.time.Clock()
+
+        # Initialize the building_layout_instance here after getting parameters
+        self.building_layout_instance = self.building_layout_class_ref(
+            initial_screen_h=adjusted_main_screen_height,
+            num_floors_val=self.num_floors,
+            num_elevators_val=self.num_elevators,
+            num_buildings_requested=self.actual_num_buildings, # Use actual_num_buildings here
+            config_floor_width=self.floor_width,
+            screen_width_param=target_screen_width
+        )
+
 
         if self.screen:
              self.reconfigure_button = ButtonFactory.create_button(
@@ -114,11 +124,14 @@ class ElevatorManagement:
                 
                 if self.simulation_started and not self.needs_reconfiguration and not clicked_on_button:
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        for bld in self.buildings:
-                            if hasattr(bld, 'floors'):
-                                for floor in bld.floors:
-                                    if hasattr(floor, 'checkclick'):
-                                        floor.checkclick(event.pos)
+                        if self.building_layout_instance: # Ensure building_layout_instance is initialized
+                            clicked_building_index = self.building_layout_instance.WHERE_IS_POSITION(event.pos[0], event.pos[1])
+                            if clicked_building_index is not None and 0 <= clicked_building_index < len(self.buildings):
+                                bld = self.buildings[clicked_building_index]
+                                if hasattr(bld, 'floors'):
+                                    for floor in bld.floors:
+                                        if hasattr(floor, 'checkclick'):
+                                            floor.checkclick(event.pos)
             
             if not self.running:
                 break

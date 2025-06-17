@@ -64,13 +64,13 @@ class elevator:
         if self.move_start_time == 0:
             self.time_last_check = pygame.time.get_ticks()
             self.move_start_time = 1
-        diftime = current_ticks - self.time_last_check
+        diftme = current_ticks - self.time_last_check
         self.time_last_check = current_ticks
-        diftime /= 1000
+        diftme /= 1000
         # Update the waiting time for all floors during the elapsed time
         for target in self.targets[index:]:
-            target.timewait -= diftime
-        return diftime * 1000
+            target.timewait -= diftme
+        return diftme * 1000
 
     # Check if 2 seconds have passed since stopping
     def timepass(self, current_ticks=pygame.time.get_ticks()): 
@@ -102,9 +102,9 @@ class elevator:
 
     # The function first checks how much time has passed and sets the amount of y to move relative to the elapsed time from half a second
     def move_elevator(self): 
-        diftime = self.time_cul()
-        speed1 = (diftime / 500) * self.floorheight * 1.1
-        diftime /= 1000
+        diftme = self.time_cul()
+        speed1 = (diftme / 500) * self.floorheight * 1.1
+        diftme /= 1000
         self.rect.y += self.direction * speed1
         targetfloor = self.targets[0]
         # In case we reached the floor, we need to update the new target, turn off the button, and update that we need to wait
@@ -116,6 +116,7 @@ class elevator:
             self.is_paused = 1
             self.func_update = self.update_when_stopped
             
+            
             targetfloor.timewait = 0
             targetfloor.finish()
             self.targets.pop(0)
@@ -124,7 +125,7 @@ class elevator:
                 self.setdirection(self.targets[0].floornum)
             else:
                 self.direction = None
-   
+    
     # Decision function for different cases. The most complicated is when there are no targets but the elevator is still waiting
     def update(self): 
        self.func_update()
